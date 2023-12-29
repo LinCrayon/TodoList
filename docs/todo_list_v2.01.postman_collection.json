@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "94c34df4-eb3b-460b-b88c-13d0c72afe2d",
+		"name": "todo_list_v2.01",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17393552"
+	},
+	"item": [
+		{
+			"name": "用户模块",
+			"item": [
+				{
+					"name": "用户注册",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "lsq",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/v1/user/register?user_name=lsq&password=123456",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"user",
+								"register"
+							],
+							"query": [
+								{
+									"key": "user_name",
+									"value": "lsq"
+								},
+								{
+									"key": "password",
+									"value": "123456"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "用户登录",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}api/v1/user/login?user_name=lsq&password=123456",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"user",
+								"login"
+							],
+							"query": [
+								{
+									"key": "user_name",
+									"value": "lsq"
+								},
+								{
+									"key": "password",
+									"value": "123456"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "任务模块",
+			"item": [
+				{
+					"name": "创建一条备忘录(task_create)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/v1/task_create?title=QSL  QSL  QSL &content=LSQ LSQ LSQ LSQ&status=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"task_create"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "QSL  QSL  QSL "
+								},
+								{
+									"key": "content",
+									"value": "LSQ LSQ LSQ LSQ"
+								},
+								{
+									"key": "status",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "获取某条备忘录的详情(task_show)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/v1/task_show?id=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"task_show"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "分页查询用户备忘录(task_list)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/v1/task_list",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"task_list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "更新备忘录(task_update)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/v1/task_update?id=5&uid=2&content=LSQ_YYDS&title=SQ&status=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"task_update"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5"
+								},
+								{
+									"key": "uid",
+									"value": "2"
+								},
+								{
+									"key": "content",
+									"value": "LSQ_YYDS"
+								},
+								{
+									"key": "title",
+									"value": "SQ"
+								},
+								{
+									"key": "status",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据info查询备忘录(task_search)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/v1/task_search?info=YYDS",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"task_search"
+							],
+							"query": [
+								{
+									"key": "info",
+									"value": "YYDS"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "删除备忘录(task_delete)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/v1/task_delete?id=4",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"v1",
+								"task_delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

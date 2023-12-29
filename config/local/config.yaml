@@ -1,0 +1,22 @@
+system:
+  domain: todo_list
+  version: 2.01
+  appEnv: "test"
+  HttpPort: ":4000"
+  Host: "localhost"
+
+mysql:
+  default:
+    dialect: "mysql"
+    host: "127.0.0.1"
+    port: "3306"
+    dbName: "todo_list_db"
+    user: "root"
+    password: "root"
+    charset: "utf8mb4"
+
+redis:
+  redisDbName: 1
+  redisHost: 127.0.0.1
+  redisPort: 6379
+
