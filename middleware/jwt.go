@@ -1,34 +1,51 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
+	"net/http"
 	"time"
-	"todo_list/pkg/utils"
+	"todo_list_v2.01/pkg/ctl"
+	"todo_list_v2.01/pkg/e"
+	"todo_list_v2.01/pkg/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
+// JWT token验证中间件
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		code := 200
-		//var data interface{}
-		token := c.GetHeader("Authorization")
+		var code int
+		code = e.SUCCESS
+		token := c.GetHeader("Authorization") //从上下文中获取HTTP请求头部中名为"Authorization"的值。
 		if token == "" {
-			code = 404
-		} else {
-			claim, err := utils.ParseToken(token)
-			if err != nil {
-				code = 403 //无权限，token是无权限的，是假的
-			} else if time.Now().Unix() > claim.ExpiresAt {
-				code = 401 //Token无效了
-			}
-		}
-		if code != 200 {
-			c.JSON(200, gin.H{
+			code = http.StatusNotFound
+			c.JSON(e.InvalidParams, gin.H{
 				"status": code,
-				"msg":    "Token解析错误",
+				"msg":    e.GetMsg(code),
+				"data":   "缺少Token",
 			})
-			c.Abort() //中止请求处理链
-			return    //使用 return 来确保函数的即时退出
+			c.Abort()
+			return
 		}
-		c.Next() //显式调用请求处理链中的下一个处理程序,制权传递给链中的下一个处理程序
+
+		claims, err := utils.ParseToken(token)
+		if err != nil {
+			code = e.ErrorAuthCheckTokenFail
+		} else if time.Now().Unix() > claims.ExpiresAt {
+			code = e.ErrorAuthCheckTokenTimeout
+		}
+
+		if code != e.SUCCESS {
+			c.JSON(e.InvalidParams, gin.H{
+				"status": code,
+				"msg":    e.GetMsg(code),
+				"data":   "可能是身份过期了，请重新登录",
+			})
+			c.Abort()
+			return
+		}
+		//c.Request.WithContext()将原始请求中的上下文替换为新创建的上下文。
+		//NewContext()创建一个新的上下文,接受两个参数，第一个是旧的上下文，第二个是要添加到上下文中的键值对。
+		c.Request = c.Request.WithContext(ctl.NewContext(c.Request.Context(), &ctl.UserInfo{Id: claims.Id}))
+		c.Next()
 	}
 }

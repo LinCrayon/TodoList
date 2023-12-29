@@ -1,30 +1,48 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"todo_list/service"
+	"todo_list_v2.01/pkg/utils"
+	"todo_list_v2.01/service"
+	"todo_list_v2.01/types"
+
+	"github.com/gin-gonic/gin"
 )
 
-// UserRegister 用户注册
-func UserRegister(c *gin.Context) {
-	var userRegister service.UserService
-	//ShouldBind用于将请求中的数据绑定到指定的结构体变量上,会根据请求的Content-Type自动选择适当的绑定器（如 form绑定、JSON绑定等）
-	if err := c.ShouldBind(&userRegister); err != nil {
-		res := userRegister.Register()
-		c.JSON(http.StatusOK, res)
-	} else {
-		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+func UserRegisterHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.UserRegisterReq
+		if err := ctx.ShouldBind(&req); err == nil {
+			// 参数校验
+			l := service.GetUserSrv()
+			resp, err := l.UserRegister(ctx.Request.Context(), &req)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+				return
+			}
+			ctx.JSON(http.StatusOK, resp)
+		} else {
+			utils.LogrusObj.Infoln(err)
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+		}
 	}
 }
 
-// UserLogin 用户登录
-func UserLogin(c *gin.Context) {
-	var userLogin service.UserService
-	if err := c.ShouldBind(&userLogin); err != nil {
-		res := userLogin.Login()
-		c.JSON(http.StatusOK, res)
-	} else {
-		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+func UserLoginHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.UserLoginReq
+		if err := ctx.ShouldBind(&req); err == nil {
+			// 参数校验
+			l := service.GetUserSrv()
+			resp, err := l.UserLogin(ctx.Request.Context(), &req)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+				return
+			}
+			ctx.JSON(http.StatusOK, resp)
+		} else {
+			utils.LogrusObj.Infoln(err)
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+		}
 	}
 }
